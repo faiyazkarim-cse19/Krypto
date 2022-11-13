@@ -7,6 +7,9 @@ import 'tachyons';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { useCallback } from "react";
+import Axios from 'axios';
+
+
 
 const particleOptions = {
     background: {
@@ -98,10 +101,32 @@ export const Login = (props) => {
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
 
+    const CheckDB = () => {
+        Axios.post ('http://localhost:3001/login', {
+         email: email,
+         password: pass,
+        }).then((response) => {
+            if(response.data.message)
+            {
+                alert(response.data.message);
+            }
+            else
+            {
+                props.onRouteChange('yes');
+            }
+        });
+     }
+    
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(email);
-        props.onRouteChange('yes');
+        if(email === '' || pass === '')
+        {
+            alert("Invalid Input!");
+        }
+        else{
+        CheckDB();
+        }
     }
 
     return (
@@ -132,7 +157,7 @@ export const Login = (props) => {
                 <button className="btn1" type="submit">Log In</button>
             </form>
             <button className="link-btn" onClick={() => {props.onFormSwitch('register');
-        props.onState('no')}}>
+        props.onRouteChange('no')}}>
             Don't have an account? Register here.
             </button>
         </div>

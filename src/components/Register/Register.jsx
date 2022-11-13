@@ -7,6 +7,8 @@ import Tilt from 'react-parallax-tilt';
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { useCallback } from "react";
+import Axios from 'axios';
+
 
 const particleOptions = {
     background: {
@@ -98,11 +100,38 @@ export const Register = (props) => {
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
     const [name, setName] = useState('');
+    
+
+    const AddUsertoDB = () => {
+        Axios.post ('http://localhost:3001/register', {
+         name: name,
+         email: email,
+         password: pass,
+        }).then((response) => {console.log(response)})
+     };
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(email);
-        props.onRouteChange('yes');
+        if(name === '' || pass === '' || emailCheck === true){
+            alert("Invalid Input Given!");
+        }
+        else
+        {
+            AddUsertoDB();
+            props.onRouteChange('yes');
+        }
+    }
+
+    const emailCheck = () => {
+
+        if(email === '')
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     return (

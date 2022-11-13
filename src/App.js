@@ -4,6 +4,7 @@ import { Layout, Typography, Space } from 'antd';
 import { Register } from './components/Register/Register.jsx';
 import { Login } from './components/Login/Login.jsx';
 
+
 import { Exchanges, Homepage, News, Cryptocurrencies, CryptoDetails, Navbar } from './components';
 import './App.css';
 import { BankFilled } from '@ant-design/icons';
