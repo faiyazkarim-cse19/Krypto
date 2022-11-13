@@ -6,11 +6,17 @@ import { Login } from './components/Login/Login.jsx';
 
 import { Exchanges, Homepage, News, Cryptocurrencies, CryptoDetails, Navbar } from './components';
 import './App.css';
+import { BankFilled } from '@ant-design/icons';
 
 const App = () => { 
 
   const [currentForm, setCurrentForm] = useState('login');
-  const [ logstate, setLogstate ] = useState('no');
+  const [logstate, setLogstate] = useState('yes');
+  const [buttontext, setbtext] = useState('Login');
+
+  const changeBtext = (bname) => {
+    setbtext(bname);
+  }
 
   const toggleForm = (formName) => {
     setCurrentForm(formName);
@@ -22,13 +28,24 @@ const App = () => {
 
 return (
   <div>
-  { logstate == 'yes' ?
+  
+  { (logstate === 'yes')?
   <div className="app">
     <div className="navbar">
-      <Navbar />
+      <Navbar onButtonName={buttontext} />
     </div>
     <div className="main">
       <Layout>
+      <button className='LLBtn' type='submit' onClick={()=>{ if(buttontext === 'Login') 
+      {toggleLogstate('no'); 
+      toggleForm('login');
+      buttontext = changeBtext('Logout');
+      }  
+      else
+      {
+      buttontext = changeBtext('Login');
+      toggleLogstate('yes');
+      }}}>{buttontext}</button>
         <div className="routes">
           <Switch>
             <Route exact path="/">
@@ -58,17 +75,20 @@ return (
         </Typography.Title>
         <Space>
           <Link to="/">Home</Link>
+          {(buttontext === 'Logout') ?
           <Link to="/exchanges">Exchanges</Link>
+          : console.log(1)
+          }
           <Link to="/news">News</Link>
         </Space>
       </div>
     </div>
   </div>
         : (
-          currentForm == 'login' ? 
+          currentForm === 'login' ? 
           <Login onFormSwitch={toggleForm} onRouteChange={toggleLogstate}/> :
           <Register onFormSwitch={toggleForm} onRouteChange={toggleLogstate}/>
-        )
+          )
       }
 </div>
 );
