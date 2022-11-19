@@ -444,6 +444,21 @@ width: 70%;
     color: #fff
 }
 
+.ProfileIcon img {
+    float: left;
+    vertical-align :middle;
+    border-radius: 50%;
+    margin: 0.5em;
+}
+
+.ProfileIcon h1 {
+    font: 400 11px system-ui;
+    font-size: 0.9em;
+    line-height: 60px;
+    font-weight: bold;
+    color: blue;
+}
+
 
 @tailwind base;
 @tailwind components;

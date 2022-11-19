@@ -3,6 +3,7 @@ import { Switch, Route, Link } from 'react-router-dom';
 import { Layout, Typography, Space } from 'antd';
 import { Register } from './components/Register/Register.jsx';
 import { Login } from './components/Login/Login.jsx';
+import profile from './images/profile.jpg';
 
 
 import { Exchanges, Homepage, News, Cryptocurrencies, CryptoDetails, Navbar } from './components';
@@ -14,6 +15,7 @@ const App = () => {
   const [currentForm, setCurrentForm] = useState('login');
   const [logstate, setLogstate] = useState('yes');
   const [buttontext, setbtext] = useState('Login');
+  const [username, setName] = useState('');
 
   const changeBtext = (bname) => {
     setbtext(bname);
@@ -37,6 +39,12 @@ return (
     </div>
     <div className="main">
       <Layout>
+      {(buttontext == 'Logout') ?  
+      <div className='ProfileIcon'>
+        <img src={profile} alt="Profile" width="50" height="50"/>
+        <h1>{username}</h1>
+      </div> : console.log(2)
+      }
       <button className='LLBtn' type='submit' onClick={()=>{ if(buttontext === 'Login') 
       {toggleLogstate('no'); 
       toggleForm('login');
@@ -70,7 +78,7 @@ return (
       <div className="footer">
         <Typography.Title level={5} style={{ color: 'white', textAlign: 'center' }}>Copyright © 2021
           <Link to="/">
-            Cryptoverse Inc.
+            Krypto.
           </Link> <br />
           All Rights Reserved.
         </Typography.Title>
@@ -87,7 +95,7 @@ return (
   </div>
         : (
           currentForm === 'login' ? 
-          <Login onFormSwitch={toggleForm} onRouteChange={toggleLogstate}/> :
+          <Login onFormSwitch={toggleForm} onRouteChange={toggleLogstate} onNameSet={setName}/> :
           <Register onFormSwitch={toggleForm} onRouteChange={toggleLogstate}/>
           )
       }

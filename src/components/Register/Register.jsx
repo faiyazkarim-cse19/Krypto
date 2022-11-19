@@ -10,6 +10,7 @@ import { useCallback } from "react";
 import Axios from 'axios';
 
 
+
 const particleOptions = {
     background: {
         color: {
@@ -100,13 +101,13 @@ export const Register = (props) => {
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
     const [name, setName] = useState('');
-    
 
     const AddUsertoDB = () => {
         Axios.post ('http://localhost:3001/register', {
          name: name,
          email: email,
-         password: pass,
+        // password: bcrypt.hashSync(pass, 1)
+        password: pass,
         }).then((response) => {console.log(response)})
      };
     
@@ -125,7 +126,7 @@ export const Register = (props) => {
 
     const emailCheck = () => {
 
-        if(email === '')
+        if(email === '' || (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/).test(email))
         {
             return true;
         }

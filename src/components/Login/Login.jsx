@@ -111,7 +111,9 @@ export const Login = (props) => {
                 alert(response.data.message);
             }
             else
-            {
+            {  
+                console.log(response.data);
+                props.onNameSet(response.data[0].clientName);  
                 props.onRouteChange('yes');
             }
         });
