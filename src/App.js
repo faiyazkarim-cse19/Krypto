@@ -16,6 +16,8 @@ const App = () => {
   const [logstate, setLogstate] = useState('yes');
   const [buttontext, setbtext] = useState('Login');
   const [username, setName] = useState('');
+  const [email, setemail] = useState('');
+
 
   const changeBtext = (bname) => {
     setbtext(bname);
@@ -61,7 +63,7 @@ return (
               <Homepage />
             </Route>
             <Route exact path="/exchanges">
-              <Exchanges />
+              <Exchanges email={email}/>
             </Route>
             <Route exact path="/cryptocurrencies">
               <Cryptocurrencies />
@@ -95,7 +97,7 @@ return (
   </div>
         : (
           currentForm === 'login' ? 
-          <Login onFormSwitch={toggleForm} onRouteChange={toggleLogstate} onNameSet={setName}/> :
+          <Login onFormSwitch={toggleForm} onRouteChange={toggleLogstate} onNameSet={setName} onemail={setemail}/> :
           <Register onFormSwitch={toggleForm} onRouteChange={toggleLogstate}/>
           )
       }

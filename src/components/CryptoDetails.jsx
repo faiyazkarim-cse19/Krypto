@@ -8,6 +8,7 @@ import { MoneyCollectOutlined, DollarCircleOutlined, FundOutlined, ExclamationCi
 import { useGetCryptoDetailsQuery, useGetCryptoHistoryQuery } from '../services/cryptoApi';
 import Loader from './Loader';
 import LineChart from './LineChart';
+import { compose } from '@reduxjs/toolkit';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -19,10 +20,13 @@ const CryptoDetails = () => {
   const { data: coinHistory } = useGetCryptoHistoryQuery({ coinId, timeperiod });
   const cryptoDetails = data?.data?.coin;
 
+  console.log(data?.data);
+  
+
 
   if (isFetching) return <Loader />;
 
-  const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
+  const time = ['24h', '7d', '1y', '5y'];
 
   const stats = [
     { title: 'Price to USD', value: `$ ${cryptoDetails?.price && millify(cryptoDetails?.price)}`, icon: <DollarCircleOutlined /> },
@@ -51,7 +55,7 @@ const CryptoDetails = () => {
       <Select defaultValue="7d" className="select-timeperiod" placeholder="Select Timeperiod" onChange={(value) => setTimeperiod(value)}>
         {time.map((date) => <Option key={date}>{date}</Option>)}
       </Select>
-      <LineChart coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails?.name} />
+      <LineChart timeperiod={timeperiod} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails?.name} />
       <Col className="stats-container">
         <Col className="coin-value-statistics">
           <Col className="coin-value-statistics-heading">

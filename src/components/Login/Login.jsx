@@ -112,8 +112,9 @@ export const Login = (props) => {
             }
             else
             {  
-                console.log(response.data);
+                //console.log(response.data);
                 props.onNameSet(response.data[0].clientName);  
+                props.onemail(response.data[0].clientMail);
                 props.onRouteChange('yes');
             }
         });
