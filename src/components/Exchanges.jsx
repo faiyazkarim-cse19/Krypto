@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
  
-import { AiFillPlayCircle } from "react-icons/ai";
+import { AiFillFilter, AiFillPlayCircle } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
 import { Select, Col, Avatar } from 'antd';
 import icon from '../images/cryptocurrency.png';
@@ -8,7 +8,7 @@ import { useGetCryptosQuery } from '../services/cryptoApi';
 import LoaderE from "./LoaderE";
 import "./table.css"
 import datar from "./mock-data.json"
-import Axios from 'axios'
+import Axios from 'axios';
  
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
  
@@ -18,28 +18,113 @@ const Exchanges = ({ email }) => {
   //const [email, setEmail] = useState("");
   const [coin, setCoin] = useState("");
   const [amount, setAmount] = useState(0);
- 
+  const [prices, setPrices] = useState([]);
+  var cost;
+  var priceOfTransactions;
+
   const [transactionsList, setTransactionsList] = useState([]);
+  const [fund, setFund] = useState([]);
+  const [isShown, setIsShown] = useState(false);
+
+  const handleClick = event => {
+    setIsShown(current => !current);
+    getBalance();
+  };
+
+  const setbuyingPrice = () => {
+    fund.map((val, key) => { cost = parseFloat(val.funds) })
+    console.log("CTN")
+    console.log(cost)
+    setPricevalues();
+  }  
+
+  const setPricevalues = () => {
+    prices.map((val, key) => {
+ 
+      console.log("hi_1")
+      console.log((val.coin));
+      console.log("hi_2")
+      
+ 
+      let flag = (val.coin).localeCompare(coin)
+      console.log(flag);
+ 
+      if (!flag)
+      {
+        priceOfTransactions = parseFloat(val.price) * amount;
+        console.log("CTN2")
+        console.log(priceOfTransactions)
+      }
+     })
+     addIntoInput();
+  }
  
   const addIntoInput = () => {
+    if(amount < 0)
+    {
+      alert("Negative input not allowed!");
+    }
+
+    else if (priceOfTransactions > cost)
+    {
+      alert("You don't have Sufficient Funds!")
+    }
+
+    else
+    {
     Axios.post("http://localhost:3001/create", {
       email: email,
       coin: coin,
       amount: amount,
+      priceOfTransactions: priceOfTransactions,
     }).then(() => {
       console.log("success")
     });
+    showInfo();
+    alert("Transaction Successfull!");
+  }
   };
  
   // this looks like an issue, fetching data and setting state in the render phase
   // leads to weird bugs, interesting that it's not causing an infinite loop since the state
   // is being set here, which would fire a re-render of the component
+
+  const getBalance = () => {
+    Axios.post("http://localhost:3001/funds", {email : email}).then((response) => {
+      setFund(response.data);
+      console.log("Successful Funds")
+      console.log(fund)
+    })
+    getPrices();
+  }
+
+  const getBalancetoo = () => {
+    Axios.post("http://localhost:3001/funds", {email : email}).then((response) => {
+      setFund(response.data);
+      console.log("Successful Funds")
+      console.log(fund)
+    })
+  }
+
+  const getPrices = () => {
+    Axios.get("http://localhost:3001/prices").then((response) => {
+      setPrices(response.data)
+      console.log("Successful Prices")
+      console.log(prices)
+    })
+  }
  
   const showInfo = () => {
   Axios.post("http://localhost:3001/transactions", {email : email}).then((response) => {
     console.log(response);
     setTransactionsList(response.data);
   });
+  getBalancetoo();
+  };
+
+  const NotEnoughFunds = () => {
+    
+    console.log(email + coin + amount);
   };
 
   /*const showInfo = () => {
@@ -123,67 +208,88 @@ const Exchanges = ({ email }) => {
  
           
           
+          <div>
+            <button onClick={handleClick}  
+            className="hulu-btn text-black w-full mt-2 border-[1px] p-4 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer">
+              
+                Start Transactions
+              
+            </button>
  
-          
+            
  
-          <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
-         {/* <input  className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism" 
-                  placeholder="Address To" name="addressTo" type="text"
-                  onChange={(event) => {setEmail(event.target.value);}}
-          />*/}
-          
-              <select className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism" 
-                      onChange={(event) => {setCoin(event.target.value); showInfo();}} name="coins" id="coins" placeholder="Select a Crypto"
-                      optionFilterProp="children"
-                      filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                {data?.data?.coins?.map((currency) => <option value={currency.name}>{currency.name}</option>)}
-              </select>
+            {isShown && (
+              <div>
+                <h1 className="text-3xl sm:text-5xl text-white text-gradient py-1">
+                   {fund.map((val, key) => {
+                    return <div className='hoise'> 
+                      <h1 className="text-3xl sm:text-5xl text-white text-gradient py-1">
+                      $ {val.funds} </h1>
+                      </div>
+                      
+                  })}
+                </h1>
+              </div>
+                )}
  
-          
-          <input className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism" 
-                 placeholder="Amount" name="amount" type="number" step="0.0001"
-                 onChange={(event) => {setAmount(event.target.value)}}
-                 />
+            {/* 👇️ show elements on click */}
+            {isShown && (
+              <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
+              
+                  <select className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism" 
+                          onChange={(event) => {setCoin(event.target.value); }} name="coins" id="coins" placeholder="Select a Crypto"
+                          optionFilterProp="children"
+                          filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    >
+                    {data?.data?.coins?.map((currency) => <option value={currency.name}>{currency.name}</option>)}
+                  </select>
+    
+              
+              <input className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism" 
+                     placeholder="Amount" name="amount" type="number" step="0.0001"
+                     onChange={(event) => {setAmount(event.target.value)}}
+                     />
+    
+              <div className="h-[3px] w-full bg-blue-400 my-2" /> 
+    
+    
+                    <button
+                      type="button"
+                      onClick={setbuyingPrice}
+                      className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
+                    >
+                      Send now
+                    </button>
+    
+              </div>
  
-          <div className="h-[3px] w-full bg-blue-400 my-2" /> 
+              
+            )}
  
- 
-                <button
-                  type="button"
-                  onClick={event => {
-                    addIntoInput();
-                    showInfo();
-                  }} 
-                  className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
-                >
-                  Send now
-                </button>
- 
+            {isShown && (
+                    <div className="app-container sm:rounded-tr-2xl" >
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>CryptoCurrency</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+        
+                      <tbody>
+                        {transactionsList.map((val, key) => {
+                          return (
+                          <tr>
+                            <td>{val.T_coin}</td>
+                            <td>{val.T_amount}</td>
+                          </tr>
+                        )})}
+                      </tbody>
+                    </table>
+                  </div>
+            )}    
           </div>
- 
-          <div className="app-container sm:rounded-tr-2xl" >
-            <table>
-              <thead>
-                <tr>
-                  <th>CryptoCurrency</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
- 
-              <tbody>
-                {transactionsList.map((val, key) => {
-                  return (
-                  <tr>
-                    <td>{val.T_coin}</td>
-                    <td>{val.T_amount}</td>
-                  </tr>
-                )})}
-              </tbody>
-            </table>
-          </div>
- 
-          
+   
  
         </div>
       </div>

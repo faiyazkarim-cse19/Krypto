@@ -459,6 +459,29 @@ width: 70%;
     color: blue;
 }
 
+.hulu-btn {
+    margin-bottom: 14px;
+    background-color: #000;
+    background-image: radial-gradient(at 4% 36%, #0071bd 0, transparent 53%), radial-gradient(at 100% 60%, rgb(0, 0, 0) 0, transparent 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: large;
+    font-weight: bold;
+}
+ 
+.hulu-btn:hover {
+    margin-bottom: 14px;
+    background-color: #000;
+    background-image: radial-gradient(at 4% 36%, #ffffff 0, transparent 53%), radial-gradient(at 100% 60%, rgb(49, 118, 192) 0, transparent 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: large;
+    font-weight: bold;
+}
+ 
+.hoise {
+    text-align: center
+}
 
 @tailwind base;
 @tailwind components;
